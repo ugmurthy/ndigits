@@ -10,8 +10,8 @@ class nDigits:
 
         # based on whether training or test data is needed set X,Y according
         if not train:
-            self._X = self.Xt
-            self._Y = self.Yt
+            self._X = self._Xt
+            self._Y = self._Yt
 
         # keep a note of sample sizes
         self.nsamples = self._X.shape[0]
