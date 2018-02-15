@@ -1,25 +1,27 @@
 from datasets import nDigits
 import matplotlib.pyplot as plt
 from random import *
-
-### part 1 ###
-# create an images digits and show it
-# this is to test/dmonstrate the use of nDigts class
-A = nDigits()
-dlen=randint(1,3)
-print("[INFO] Digits to extract {} from {} samples\n".format(dlen,A.nsamples))
-
-(X,y)=A.get(dlen)
-
-plt.imshow(X,cmap=plt.get_cmap('gray'))
-#plt.title("length = {} digits = {}".format(y[0],y[1:]))
-plt.title("length = {0:d},digits = [{1:d},{2:d},{3:d}]".format(y[0],y[1],y[2],y[3]))
-plt.show()
-### end of part 1 ###
-
-### part 2 - write 2000 samples of training date and 1000 samples of test data to file
 import os
 import numpy as np
+
+### part 1 ###
+# create one image consisting of 3 digits and show it
+# this is to test/dmonstrate the use of nDigits class
+A = nDigits()
+#dlen=randint(1,3)
+dlen=3
+template='X2'
+print("[INFO] Digits to extract {} from {} samples\n".format(dlen,A.nsamples))
+# getImage and image label using template "X2" and consisting of dlen digits
+(X,y)=A.getImage(template,dlen)
+
+plt.imshow(X,cmap=plt.get_cmap('gray'))
+
+plt.title("length = {0:d},digits = [{1:d},{2:d},{3:d}]".format(y[0],y[1],y[2],y[3]))
+plt.show()
+### end of Part 1 ###
+
+### part 2 - write 2000 samples of training date and 1000 samples of test data to file
 
 # frequency table for sample data - keys indicate number of digit, value indicate number of samples
 freqTrain={'1':0,'2':0,'3':0}
@@ -28,8 +30,8 @@ freqTest={'1':0,'2':0,'3':0}
 fname = '_test_.npz'
 if (os.path.exists(fname)):
     os.remove(fname)
-ntrain = 2000
-ntest = 1000
+ntrain = 20
+ntest = 10
 X_train = []
 y_train = []
 X_test = []
@@ -38,7 +40,7 @@ y_test =[]
 # generate training data
 trainset = nDigits(train=True)
 for i in range(ntrain):
-    (X,y)=trainset.get(randint(1,3))
+    (X,y)=trainset.getImage("L3",nlen=randint(1,3))
     X_train.append(X)
     y_train.append(y)
     freqTrain[str(y[0])] += 1
@@ -48,9 +50,9 @@ y_train = np.array(y_train)
 
 
 # generate test data
-trainset = nDigits(train=False)
+testset = nDigits(train=False)
 for i in range(ntest):
-    (X,y)=trainset.get(randint(1,3))
+    (X,y)=testset.getImage("_3",nlen=randint(1,3))
     X_test.append(X)
     y_test.append(y)
     freqTest[str(y[0])] += 1
@@ -94,8 +96,8 @@ X3 = X_test[idx]
 y3 = y_test[idx]
 
 idx=randint(0,ntest-1)
-X4 = X_train[idx]
-y4 = y_train[idx]
+X4 = X_test[idx]
+y4 = y_test[idx]
 
 # plot the 4 images with y data as subplot title
 ax=plt.subplot(221)

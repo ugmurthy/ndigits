@@ -4,6 +4,8 @@ from random import *
 import numpy as np
 import argparse
 import os
+import imutils
+
 
 
 # Generate data from mnist data - each image contains 1,2 or 3 digits along with its y-lables
@@ -21,7 +23,9 @@ ap.add_argument("-t", "--train-size", type=int, default=50000,
 	help="training set sample size")
 ap.add_argument("-s", "--test-size", type=int, default=30000,
 	help="test set sample size")
-ap.add_argument("-c","--compressed",type=int,default=0,
+ap.add_argument("-i", "--image-size", type=int, default=0,
+	help="-i 1 for half size image default is fullsize image")
+ap.add_argument("-c","--compressed",type=int,default=1,
     help="compress? 0 is no-compression 1 is compression")
 args = vars(ap.parse_args())
 
@@ -45,10 +49,12 @@ if (os.path.exists(fname)):
 # generate training data
 trainset = nDigits(train=True)
 for i in range(ntrain):
-    (X,y)=trainset.get(randint(1,3))
-    X_train.append(X)
-    y_train.append(y)
-    freqTrain[str(y[0])] += 1
+	(X,y)=trainset.getImage("_2",randint(1,3))
+	if args["image_size"]==1:
+		X = imutils.resize(X,width=42)
+	X_train.append(X)
+	y_train.append(y)
+	freqTrain[str(y[0])] += 1
 
 X_train = np.array(X_train)
 y_train = np.array(y_train)
@@ -56,11 +62,13 @@ y_train = np.array(y_train)
 
 # generate test data
 trainset = nDigits(train=False)
-for i in range(ntest):
-    (X,y)=trainset.get(randint(1,3))
-    X_test.append(X)
-    y_test.append(y)
-    freqTest[str(y[0])] += 1
+for i in range(ntrain):
+	(X,y)=trainset.getImage("_2",randint(1,3))
+	if args["image_size"]==1:
+		X = imutils.resize(X,width=42)
+	X_test.append(X)
+	y_test.append(y)
+	freqTrain[str(y[0])] += 1
 
 X_test = np.array(X_test)
 y_test = np.array(y_test)
