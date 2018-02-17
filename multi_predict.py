@@ -5,12 +5,13 @@ from keras.optimizers import SGD
 from keras.utils import to_categorical
 from datasets import nDigits
 import numpy as np
+import imutils
 from random import *
 import matplotlib.pyplot as plt
 import argparse
 
 ap = argparse.ArgumentParser()
-ap.add_argument("-m", "--model", default='m10.model',
+ap.add_argument("-m", "--model", required=True,
 	help="path to existing model")
 ap.add_argument("-n", "--num", type=int, default=32,
 	help="number of samples to use for prediction")
@@ -21,7 +22,7 @@ args = vars(ap.parse_args())
 # python multi.py -m m4.model -s H4.npz -d 512 -l 0.01
 # initialise filenames
 mname=args['model']
-fname="multidigits_c.npz"
+fname="multidigithalf_c.npz"
 freq={'1':0,'2':0,'3':0}
 X_=[]
 y_=[]
@@ -31,10 +32,11 @@ predSamples=args['num']
 print("[INFO] Generating Sample data for prediction...")
 sampleSet = nDigits(train=True)
 for i in range(predSamples):
-    (X,y)=sampleSet.get(randint(1,3))
-    X_.append(X)
-    y_.append(y)
-    freq[str(y[0])] += 1
+	(X,y)=sampleSet.getImage("_2",randint(1,3))
+	X = imutils.resize(X,width=42)
+	X_.append(X)
+	y_.append(y)
+	freq[str(y[0])] += 1
 
 X = np.array(X_)
 y = np.array(y_)

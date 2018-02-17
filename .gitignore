@@ -1,3 +1,5 @@
+*.model
+**/*.pyc
 *.npz
 *.mo
 *.egg-info
@@ -17,9 +19,9 @@ dist
 .hg
 .bzr
 .svn
-*.pyc
 *.pyo
 *.tmp*
 out
 imgs
 *.jpg
+*.png

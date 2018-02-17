@@ -62,7 +62,7 @@ y_train = np.array(y_train)
 
 # generate test data
 trainset = nDigits(train=False)
-for i in range(ntrain):
+for i in range(ntest):
 	(X,y)=trainset.getImage("_2",randint(1,3))
 	if args["image_size"]==1:
 		X = imutils.resize(X,width=42)
